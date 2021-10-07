@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        
+        
+        <title>Type-N-Speak</title>
+        </head>
+        <body>
+          Select Voice: <select name="" id="voiceList"></select>
+          <br><br>
+          <input type="text" id="txtInput">
+          <br><br>
+          <!--button it is used to convert the  input to speech-->
+          <button id="btnSpeak">Speak!</button>
+          <script>
+              //we have var to create a  references
+              var voiceList = document.querySelector('#voiceList');
+              var txtInput = document.querySelector('#txtInput');
+              var btnSpeak = document.querySelector('#btnSpeak');
+             //to convert text to speech
+              var tts = window.speechSynthesis;
+              //to create a array
+              var voices = [];
+              //default constructor
+              getVoices();
+              //to check that text is written
+              if(speechSynthesis !== undefined)
+              {
+                  //onvoicechanged is used to change the text to voice
+                  speechSynthesis.onvoiceschanged = getVoices;
+              }
+              btnSpeak.addEventListener('click',()=>
+              {
+                  //The SpeechSynthesisUtterance interface of the Web Speech API represents a speech request. It contains the content the speech service should read and information about how to read it (e.g. language, pitch and volume.)
+                  var toSpeak = new SpeechSynthesisUtterance(txtInput.value);
+                  var selectedVoiceName = voiceList.selectedOptions[0].getAttribute('data-name');
+                  voices.forEach((voice)=>{
+                      if(voice.name === selectedVoiceName)
+                      {
+                          toSpeak.voice = voice;
+
+                      }
+                  });
+                  tts.speak(toSpeak);
+              });
+
+
+              //to have a function to to get voices
+              function getVoices()
+              {
+                  voices = tts.getVoices();
+                  //innerHTML is   a property to return a HTML
+                  voiceList.innerHTML = '';
+                  voices.forEach((voice)=> {
+                      //it is used to create a option
+                      var listItem = document.createElement('option');
+                      //properties of the list item
+                      //name of the voice
+                      listItem.textContent = voice.name
+                      //attributes of the voice
+                      listItem.setAttribute('data-lang',voice.lang);
+                      listItem.setAttribute('data-name',voice.name);
+                      //The appendChild function is a method of adding an HTML element to the end of another HTML element.
+                      voiceList.appendChild(listItem);
+
+                     
+
+
+                  });
+                  voiceList.selectedIndex = 0;
+
+              }
+
+             
+          </script>
+
+        </body>
+
+</html>
